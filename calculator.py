@@ -61,7 +61,7 @@ class AddressNetwork:
             bin_octets.append(bin_octet)
         return bin_octets
 
-    def __mul__(self, other) -> List[str]:
+    def __and__(self, other) -> List[str]:
         if isinstance(other, AddressNetwork):
             new_octets = []
             for i in range(4):
@@ -123,4 +123,4 @@ class IPv4(AddressNetwork):
 
 ip = IPv4('192.168.209.1', '255.255.128.0')
 print()
-print(ip*ip.mask)
+print(ip&ip.mask)
