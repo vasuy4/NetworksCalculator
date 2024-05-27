@@ -31,3 +31,29 @@ def bin_in_dec(bin_number: str) -> int:
             resDecimal += '{}+'.format(2**(len(bin_number) - i - 1))
     print('{} = {} = {}'.format(res[0:-1], resDecimal[0:-1], dec_number))
     return dec_number
+
+
+class Mask:
+    def __init__(self, mask: str):
+        self.octets = mask.split('.')
+        self.mask = mask
+        print(self.octets, self.mask)
+
+    def __str__(self):
+        return self.mask
+
+
+class IPv4:
+    def __init__(self, iPv4_address: str, mask: str):
+        self.octets = iPv4_address.split('.')
+        self.address = iPv4_address
+        self.mask = Mask(mask)
+        print(self.octets, self.address)
+
+    def __str__(self):
+        return '{}::{}'.format(self.address, self.mask)
+
+
+
+
+ip = IPv4('192.168.16.1', '255.255.255.0')
