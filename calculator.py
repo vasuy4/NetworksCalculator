@@ -147,5 +147,11 @@ class IPv4(AddressNetwork):
         return '{}::{}'.format(self.ipv4_address, self.mask)
 
 
-ip = IPv4('192.168.209.1', '255.255.128.0')
-ip.print_all_info()
+def calculate_for_ui(ipv4, mask):
+    ip = IPv4(ipv4, mask)
+    ip.print_all_info()
+
+
+if __name__ == "__main__":
+    ip = IPv4('192.168.209.1', '255.255.128.0')
+    ip.print_all_info()

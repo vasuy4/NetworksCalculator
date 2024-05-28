@@ -1,5 +1,5 @@
 import tkinter as tk
-
+from calculator import calculate_for_ui
 
 def main():
     root = tk.Tk()
@@ -21,6 +21,14 @@ def main():
     entryMask = tk.Entry(root, textvariable=varMask)
     entryMask.grid(row=1, column=1)
 
+    def callback_calculate():
+        ipv4 = entryIPv4.get()
+        mask = entryMask.get()
+        calculate_for_ui(ipv4, mask)
+
+
+    btnCalc = tk.Button(root, text="Calculate!", command=callback_calculate)
+    btnCalc.grid(row=2, column=1)
 
     root.mainloop()
 
