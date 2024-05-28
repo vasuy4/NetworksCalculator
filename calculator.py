@@ -110,6 +110,7 @@ class Mask(AddressNetwork):
         self.mask = mask
         self.bin_mask = "{}.{}.{}.{}".format(self.bin_octets[0], self.bin_octets[1], self.bin_octets[2], self.bin_octets[3])
         self.prefix = self.calc_prefix()
+        self.prefix_int = int(self.prefix[1:])
 
     def calc_prefix(self) -> str:
         summ_bit = 0
@@ -134,14 +135,25 @@ class IPv4(AddressNetwork):
                                              self.bin_octets[3])
         self.mask = Mask(mask)
 
+        self.num_addresses_subnet = 2**(32-self.mask.prefix_int)
+        self.num_nodes_subnet = self.num_addresses_subnet - 2
+
         self.binIPv4Subnet = self&self.mask
         self.ipv4Subnet = ip_address_bin_in_dec(self.binIPv4Subnet)
 
     def print_all_info(self):
-        print("IPv4 адрес - {}, в двоичном виде {}".format(self.ipv4_address, self.bin_ipv4_address))
-        print("Маска подсети - {}, в двоичном виде {}".format(self.mask, self.mask.bin_mask))
-        print("IPv4 адрес подсети - {}, в двоичном виде {}".format(self.ipv4Subnet, self.bin_ipv4_address))
+        all_info = self.list_all_info()
+        for info in all_info:
+            print(info)
 
+    def list_all_info(self):
+        all_info = ["IPv4 адрес - {}, {}".format(self.ipv4_address, self.bin_ipv4_address),
+                    "Маска подсети - {}, {}".format(self.mask, self.mask.bin_mask),
+                    "Префикс маски - {}".format(self.mask.prefix),
+                    "Число адресов в подсети - {}".format(self.num_addresses_subnet),
+                    "Число узлов в подсети - {}".format(self.num_nodes_subnet),
+                    "IPv4 адрес подсети - {}, {}".format(self.ipv4Subnet, self.bin_ipv4_address),]
+        return all_info
 
     def __str__(self):
         return '{}::{}'.format(self.ipv4_address, self.mask)
@@ -150,6 +162,7 @@ class IPv4(AddressNetwork):
 def calculate_for_ui(ipv4, mask):
     ip = IPv4(ipv4, mask)
     ip.print_all_info()
+    return ip.list_all_info()
 
 
 if __name__ == "__main__":
