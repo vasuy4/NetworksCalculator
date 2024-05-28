@@ -37,6 +37,16 @@ def bin_in_dec(bin_number: str) -> int:
     return dec_number
 
 
+def ip_address_bin_in_dec(ip_address: str) -> str:
+    """Преобразует целый двоичный ip-адрес в десятичное число"""
+    decIp = ''
+    octetsList = ip_address.split('.')
+    for octet in octetsList:
+        decOctet = bin_in_dec(octet)
+        decIp += str(decOctet) + "."
+    return decIp[0:-1]
+
+
 class AddressNetwork:
     def __init__(self, fourHexadecimal: str):
         self.fourHexadecimal = fourHexadecimal
@@ -61,21 +71,20 @@ class AddressNetwork:
             bin_octets.append(bin_octet)
         return bin_octets
 
-    def __and__(self, other) -> List[str]:
+    def __and__(self, other) -> str:
         if isinstance(other, AddressNetwork):
-            new_octets = []
+            new_octets = ''
             for i in range(4):
                 octet1 = self.bin_octets[i]
                 octet2 = other.bin_octets[i]
-                print(octet1, octet2)
                 new_octet = ''
                 for j in range(len(octet1)):
                     if octet1[j] == '1' and octet2[j] == '1':
                         new_octet += "1"
                     else:
                         new_octet += '0'
-                new_octets.append(new_octet)
-            return new_octets
+                new_octets += new_octet + "."
+            return new_octets[0:-1]
         else:
             print("Нельзя это складывать!")
 
@@ -90,8 +99,6 @@ class Mask(AddressNetwork):
         self.mask = mask
         self.bin_mask = "{}.{}.{}.{}".format(self.bin_octets[0], self.bin_octets[1], self.bin_octets[2], self.bin_octets[3])
         self.prefix = self.calc_prefix()
-
-        print(self.octets, self.mask, self.bin_mask)
 
     def calc_prefix(self) -> str:
         summ_bit = 0
@@ -115,7 +122,9 @@ class IPv4(AddressNetwork):
         self.mask = Mask(mask)
         self.bin_mask = "{}.{}.{}.{}".format(self.bin_octets[0], self.bin_octets[1], self.bin_octets[2],
                                              self.bin_octets[3])
-        print(self.octets, self.address, self.bin_mask)
+        self.binIPv4Subnet = self&self.mask
+        self.ipv4Subnet = ip_address_bin_in_dec(self.binIPv4Subnet)
+        print(self.octets, self.address, self.mask, self.binIPv4Subnet, self.ipv4Subnet)
 
     def __str__(self):
         return '{}::{}'.format(self.address, self.mask)
@@ -123,4 +132,4 @@ class IPv4(AddressNetwork):
 
 ip = IPv4('192.168.209.1', '255.255.128.0')
 print()
-print(ip&ip.mask)
+# print(ip&ip.mask)
