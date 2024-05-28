@@ -35,6 +35,13 @@ def main():
     btnCalc = tk.Button(root, text="Calculate!", command=lambda: callback_calculate(output))
     btnCalc.grid(row=2, column=1)
 
+    def clear_output():
+        output.delete(1.0, tk.END)
+
+    btnClear = tk.Button(root, text="Clear", command=clear_output)
+    btnClear.grid(row=4, column=1)
+
+
     root.mainloop()
 
 
