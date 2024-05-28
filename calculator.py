@@ -1,11 +1,12 @@
 import math
+import time
 from typing import List
 
 
 def dec_in_bin(number: int) -> str:
     """Преобразует десятичное число в двоичное"""
     if number == 0:
-        print("0 в двоичном виде 0")
+        # print("0 в двоичном виде 0")
         return "0"
     remain_number = number
     binary_number = ''
@@ -18,8 +19,8 @@ def dec_in_bin(number: int) -> str:
         else:
             binary_number += '0'
             bit = 0
-        print("{pow} степень - {bit} {dec}".format(pow=i, bit=bit, dec=2**i*bit))
-    print("{} в двоичном виде: {}, длина {}".format(number, binary_number, len(binary_number)))
+        # print("{pow} степень - {bit} {dec}".format(pow=i, bit=bit, dec=2**i*bit))
+    # print("{} в двоичном виде: {}, длина {}".format(number, binary_number, len(binary_number)))
     return binary_number
 
 
@@ -33,7 +34,7 @@ def bin_in_dec(bin_number: str) -> int:
             dec_number += 2 ** (len(bin_number) - i - 1)
             res += '2^{}+'.format(len(bin_number) - i - 1)
             resDecimal += '{}+'.format(2**(len(bin_number) - i - 1))
-    print('{} = {} = {}'.format(res[0:-1], resDecimal[0:-1], dec_number))
+    # print('{} = {} = {}'.format(res[0:-1], resDecimal[0:-1], dec_number))
     return dec_number
 
 
@@ -45,6 +46,16 @@ def ip_address_bin_in_dec(ip_address: str) -> str:
         decOctet = bin_in_dec(octet)
         decIp += str(decOctet) + "."
     return decIp[0:-1]
+
+
+def ip_address_dec_in_bin(ip_address: str) -> str:
+    """Преобразует десятичный ip-адрес в двоичный"""
+    binIp = ''
+    octetsList = ip_address.split('.')
+    for octet in octetsList:
+        binOctet = dec_in_bin(int(octet))
+        binIp += binOctet + "."
+    return binIp[0:-1]
 
 
 class AddressNetwork:
@@ -118,18 +129,23 @@ class IPv4(AddressNetwork):
         self.octets = list(map(int, iPv4_address.split('.')))
         self.bin_octets = self.fillingZeros(self.calc_bin_octets())
 
-        self.address = iPv4_address
-        self.mask = Mask(mask)
-        self.bin_mask = "{}.{}.{}.{}".format(self.bin_octets[0], self.bin_octets[1], self.bin_octets[2],
+        self.ipv4_address = iPv4_address
+        self.bin_ipv4_address = "{}.{}.{}.{}".format(self.bin_octets[0], self.bin_octets[1], self.bin_octets[2],
                                              self.bin_octets[3])
+        self.mask = Mask(mask)
+
         self.binIPv4Subnet = self&self.mask
         self.ipv4Subnet = ip_address_bin_in_dec(self.binIPv4Subnet)
-        print(self.octets, self.address, self.mask, self.binIPv4Subnet, self.ipv4Subnet)
+
+    def print_all_info(self):
+        print("IPv4 адрес - {}, в двоичном виде {}".format(self.ipv4_address, self.bin_ipv4_address))
+        print("Маска подсети - {}, в двоичном виде {}".format(self.mask, self.mask.bin_mask))
+        print("IPv4 адрес подсети - {}, в двоичном виде {}".format(self.ipv4Subnet, self.bin_ipv4_address))
+
 
     def __str__(self):
-        return '{}::{}'.format(self.address, self.mask)
+        return '{}::{}'.format(self.ipv4_address, self.mask)
 
 
 ip = IPv4('192.168.209.1', '255.255.128.0')
-print()
-# print(ip&ip.mask)
+ip.print_all_info()
